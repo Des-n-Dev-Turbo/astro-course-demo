@@ -1,4 +1,4 @@
-import  defaultTheme  from 'tailwindcss/defaultTheme';
+import defaultTheme from 'tailwindcss/defaultTheme';
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -8,7 +8,13 @@ export default {
       fontFamily: {
         sans: ['Cabin', ...defaultTheme.fontFamily.sans],
       },
+      aspectRatio: {
+        thumbnail: '1.5',
+      },
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/typography'),
+    // ...
+  ],
 };
