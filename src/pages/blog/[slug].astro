@@ -1,35 +1,31 @@
 ---
-import type { GetStaticPaths } from 'astro';
-import { getCollection } from 'astro:content';
+export const prerender = false;
+import { Image, getImage } from 'astro:assets';
+import { getEntryBySlug } from 'astro:content';
 
 import Layout from '../../layouts/Layout.astro';
 import Main from '../../components/Main.astro';
 import H1 from '../../components/H1.astro';
 import TableOfContents from '../../components/TableOfContents.astro';
 import Share from '../../components/Share.astro';
-import { Image, getImage } from 'astro:assets';
+import PostMeta from '../../components/PostMeta.astro';
 
-export const getStaticPaths = (async () => {
-  const allPosts = await getCollection('posts');
+import { getThumbnail } from '../../cloudinary';
 
-  const paths = allPosts.map((post) => ({
-    params: { slug: post.slug },
-    props: { post },
-  }));
+const { slug } = Astro.params;
 
-  return paths;
-}) satisfies GetStaticPaths;
+const post = await getEntryBySlug('posts', slug as string);
 
-const { post } = Astro.props;
+if (!post) {
+  return Astro.redirect('/404');
+}
 
 const { Content, headings } = await post.render();
-
-const coverImageSource = (await getImage({ src: post.data.image })).src;
 ---
 
 <Layout
   title={post.data.title}
-  image={coverImageSource}
+  image={getThumbnail(post.data.title)}
   description={post.data.description}
 >
   <Main>
@@ -37,9 +33,12 @@ const coverImageSource = (await getImage({ src: post.data.image })).src;
       ← Back to all blogs
     </a>
     <H1 text={post.data.title} />
+    <PostMeta post={post} />
     <Image
       src={post.data.image}
       alt={post.data.title}
+      fetchpriority="high"
+      loading="eager"
       class="rounded-2xl shadow-xl mb-28 aspect-thumbnail object-cover"
     />
     <div class="mb-10">
@@ -47,7 +46,7 @@ const coverImageSource = (await getImage({ src: post.data.image })).src;
     </div>
     <div class="relative">
       <Share post={post} />
-      <div class="prose prose-2xl overflow-visible relative">
+      <div class="prose prose-2xl overflow-visible relative mb-36">
         <Content />
       </div>
     </div>

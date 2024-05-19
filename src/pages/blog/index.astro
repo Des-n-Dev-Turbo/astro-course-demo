@@ -8,9 +8,20 @@ import H1 from '../../components/H1.astro';
 import Pagination from '../../components/Pagination.astro';
 import CategoryList from '../../components/CategoryList.astro';
 
-const allPosts = (await getCollection('posts')).slice(0, 6);
-const allCategories = allPosts.flatMap((post) => post.data.categories);
+export const prerender = false;
+
+const page = Number(Astro.url.searchParams.get('page')) || 1;
+
+const postsPerPage = Number(import.meta.env.POSTS_PER_PAGE);
+const start = (page - 1) * postsPerPage;
+const end = start + postsPerPage;
+
+const allPosts = await getCollection('posts');
+const posts = allPosts.slice(start, end);
+const allCategories = posts.flatMap((post) => post.data.categories);
 const categories = Array.from(new Set(allCategories));
+
+const totalNoOfPosts = allPosts.length;
 ---
 
 <Layout
@@ -24,11 +35,11 @@ const categories = Array.from(new Set(allCategories));
     </p>
     <CategoryList categories={categories} title="Tags" />
     <div class="mb-12">
-      <Pagination nextURL="/blog/1" />
+      <Pagination page={page} numberOfPosts={totalNoOfPosts} />
     </div>
-    <PostsList posts={allPosts} />
-    <div class="mb-36">
-      <Pagination nextURL="/blog/1" />
+    <PostsList posts={posts} />
+    <div class="mt-12 mb-36">
+      <Pagination page={page} numberOfPosts={totalNoOfPosts} />
     </div>
   </Main>
 </Layout>

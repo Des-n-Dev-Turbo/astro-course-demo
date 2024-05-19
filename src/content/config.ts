@@ -16,6 +16,15 @@ const postsCollection = defineCollection({
     }),
 });
 
+const authorsCollection = defineCollection({
+  schema: ({ image }) =>
+    z.object({
+      name: z.string(),
+      image: image(),
+    }),
+});
+
 export const collections = {
+  authors: authorsCollection,
   posts: postsCollection,
 };
