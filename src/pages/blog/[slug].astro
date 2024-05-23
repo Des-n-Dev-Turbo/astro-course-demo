@@ -1,6 +1,6 @@
 ---
 export const prerender = false;
-import { Image, getImage } from 'astro:assets';
+import { Image } from 'astro:assets';
 import { getEntryBySlug } from 'astro:content';
 
 import Layout from '../../layouts/Layout.astro';
@@ -9,16 +9,64 @@ import H1 from '../../components/H1.astro';
 import TableOfContents from '../../components/TableOfContents.astro';
 import Share from '../../components/Share.astro';
 import PostMeta from '../../components/PostMeta.astro';
+import CommentForm from '../../components/CommentForm.astro';
 
 import { getThumbnail } from '../../cloudinary';
+import { XataClient } from '../../xata';
+import CommentList from '../../components/CommentList.astro';
+import EmojiReactions from '../../components/EmojiReactions.svelte';
+import { getReactionsDetailsByPost } from '../../utils/Emoji';
 
+import type { ReactionsDetail } from '../../types/Emoji';
+
+const xata = new XataClient({ apiKey: import.meta.env.XATA_API_KEY });
+
+const user = Astro.cookies.get('userId');
 const { slug } = Astro.params;
+
+if (Astro.request.method === 'POST') {
+  if (!user?.value) {
+    return Astro.redirect('/login');
+  }
+
+  const formData = await Astro.request.formData();
+  const comment = formData.get('comment') as string;
+
+  const dbComments = await xata.db.comments
+    .select(['text', 'user.id'])
+    .filter({ post: slug })
+    .getMany();
+
+  console.log(dbComments);
+
+  const duplicateComments = dbComments.filter(
+    (dbComment) =>
+      dbComment.text.trim() === comment.trim() &&
+      dbComment.user?.id === user.value
+  );
+
+  if (duplicateComments.length < 1) {
+    await xata.db.comments.create({
+      text: comment,
+      date: new Date(),
+      user: user.value,
+      post: slug,
+    });
+  }
+}
 
 const post = await getEntryBySlug('posts', slug as string);
 
 if (!post) {
   return Astro.redirect('/404');
 }
+
+const comments = await xata.db.comments
+  .select(['id', 'text', 'date', 'user.name'])
+  .filter({ post: post.slug })
+  .getMany();
+
+const reactionsDetail = await getReactionsDetailsByPost(post.slug, user?.value);
 
 const { Content, headings } = await post.render();
 ---
@@ -50,5 +98,30 @@ const { Content, headings } = await post.render();
         <Content />
       </div>
     </div>
+    <EmojiReactions
+      client:visible
+      post={post.slug}
+      reactionsDetail={reactionsDetail as ReactionsDetail}
+    />
   </Main>
+  <div
+    class="bg-teal-100/30 py-14 px-24 relative border-b border-b-teal-900 mt-44"
+  >
+    <div class="max-w-7xl mx-auto">
+      <div id="comments" class="mb-4">
+        <h2>
+          <span class="font-bold text-teal-900 text-4xl mr-12">Comments</span>
+          <span
+            class="border border-teal-900 text-teal-900 rounded-full px-4 py-2 font-bold text-xl"
+          >
+            {comments.length}
+          </span>
+        </h2>
+      </div>
+      <div class="mb-14">
+        <CommentForm post={post} />
+      </div>
+      <CommentList comments={comments} />
+    </div>
+  </div>
 </Layout>

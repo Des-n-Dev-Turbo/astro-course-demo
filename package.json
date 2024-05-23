@@ -15,15 +15,20 @@
     "@astrojs/tailwind": "^5.1.0",
     "@cloudinary/url-gen": "^1.19.0",
     "@fontsource/cabin": "^5.0.18",
+    "@fortawesome/free-solid-svg-icons": "^6.5.2",
+    "@xata.io/client": "^0.29.4",
     "astro": "^4.7.0",
+    "bcryptjs": "^2.4.3",
     "date-fns": "^3.6.0",
     "kwesforms": "^2.2.9",
     "svelte": "^4.2.17",
+    "svelte-fa": "^4.0.2",
     "tailwindcss": "^3.4.3",
     "typescript": "^5.4.5"
   },
   "packageManager": "yarn@1.22.19+sha1.4ba7fc5c6e704fce2066ecbfb0b0d8976fe62447",
   "devDependencies": {
-    "@tailwindcss/typography": "^0.5.12"
+    "@tailwindcss/typography": "^0.5.12",
+    "@types/bcryptjs": "^2.4.6"
   }
 }
