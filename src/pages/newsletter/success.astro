@@ -1,0 +1,26 @@
+---
+import Main from '../../components/Main.astro';
+import Layout from '../../layouts/Layout.astro';
+
+const exists = Astro.url.searchParams.get('exists');
+---
+
+<Layout title="Newsletter Success!">
+  <Main>
+    <p class="text-center pt-12 text-2xl">
+      {
+        exists
+          ? 'Looks like you are already subscribed!'
+          : 'Thanks for subscribing!'
+      }
+    </p>
+    <p class="text-center">We promise, we don't spam..</p>
+    {
+      exists && (
+        <p class="text-center">
+          We are glad you like our content so, much we will keep you posted.{' '}
+        </p>
+      )
+    }
+  </Main>
+</Layout>

@@ -1,0 +1,18 @@
+{
+  "id": "mig_cp7pa0rrgin2nopfi3gg",
+  "parentID": "mig_cp7p9mrrgin2nopfi3fg",
+  "checksum": "1:d3d38a2b2197b2c71eedb4a24a9330b894bba99d6d7d729c296656ffd3fe87c5",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "post",
+          "type": "string",
+          "notNull": true,
+          "defaultValue": "null"
+        },
+        "table": "reactions"
+      }
+    }
+  ]
+}

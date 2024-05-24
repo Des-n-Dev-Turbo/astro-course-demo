@@ -1,0 +1,17 @@
+{
+  "id": "mig_cp8dng8bnhe4hhtsr820",
+  "parentID": "mig_cp8dn98bnhe4hhtsr810",
+  "checksum": "1:d7ee8c943b5227a6d55d843eac8cf435215d665673de2ca4e39ad903db8f2163",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "email",
+          "type": "string",
+          "unique": true
+        },
+        "table": "subscribers"
+      }
+    }
+  ]
+}

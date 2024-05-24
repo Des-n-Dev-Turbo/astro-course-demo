@@ -1,0 +1,13 @@
+{
+  "id": "mig_cp5q2vegjlkrbc3bskl0",
+  "parentID": "mig_cp5q2reqr6meiu4iglkg",
+  "checksum": "1:dcd7e3771839b9051766b84a408c40b280a3823e08ea7c4e0280ec7e334d7dda",
+  "operations": [
+    {
+      "renameTable": {
+        "newName": "comments",
+        "oldName": "comment"
+      }
+    }
+  ]
+}

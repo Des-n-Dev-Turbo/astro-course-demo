@@ -1,0 +1,18 @@
+{
+  "id": "mig_cp7p9mrrgin2nopfi3fg",
+  "parentID": "mig_cp7p9bbrgin2nopfi3eg",
+  "checksum": "1:ce338b8e5fd388db57a2ba997fc12b6e757b6fcdb03d08ca892e4600f9d5c3ec",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "emoji",
+          "type": "string",
+          "notNull": true,
+          "defaultValue": "star"
+        },
+        "table": "reactions"
+      }
+    }
+  ]
+}
